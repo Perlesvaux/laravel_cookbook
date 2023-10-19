@@ -1,0 +1,130 @@
+0- install php & php-xml:
+sudo apt update
+sudo apt install php
+sudo apt install php-xml
+
+Check version with: php -v
+Check config file with: php -ini | grep php.ini
+Config file location:  /etc/php/8.1/cli/php.ini
+
+#Run server: 
+Go to project's directory and do:
+php -S localhost:8000 
+
+
+--Alternative php installation--
+Install XAMPP through https://www.apachefriends.org/es/download.html
+
+Config file location:  /opt/lampp/etc/php.ini
+
+#Run server: 
+sudo /opt/lampp/lampp start    //turn it off with: sudo /opt/lampp/lampp stop
+
+
+--Setup config file php.ini--
+#Un-comment following extensions:
+extension=curl
+extension=fileinfo
+extension=gd
+extension=mysqli
+extension=openssl
+
+#Enable those PDO you'll be using.
+extension=pdo_firebird
+extension=pdo_mysql
+extension=pdo_oci
+extension=pdo_odbc
+extension=pdo_pgsql
+extension=pdo_sqlite
+
+
+--Dependencies--
+1- Installing Node and npm through nvm:
+#Install nvm (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+nvm install 18
+nvm use 18
+
+2- install composer (package manager) in current directory
+go to: https://getcomposer.org/download/ and follow CLI instructions.
+
+You should now have a "composer.phar" on current directory.
+
+
+--Laravel--
+3- create Laravel project:
+php composer.phar create-project laravel/laravel example-app
+
+or, if you did "mv composer.phar ~/bin/composer", then:
+composer create-project laravel/laravel example-app
+
+#After project has been created, start Laravel's local development server:
+cd example-app
+php artisan serve  //or ./artisan serve
+
+
+--Database config--
+4- This example uses MySQL. 
+For most use-cases, an empty database & a single user with enough privileges will be enough
+
+sudo apt install mysql-server
+sudo mysql_secure_installation
+systemctl status mysql
+sudo mysql
+CREATE DATABASE databasename;
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'enterPasswordHere';
+GRANT INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost';
+
+New user can now access MySQL like this: mysql -u username -p
+Or, with: mysql -h localhost -u username -p databasename
+
+inside, you can create the following table:
+CREATE TABLE `user` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `age` int DEFAULT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `occupation` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+  );
+
+
+5- now, edit the example-app/.env file. 
+*configure database:
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=databasename
+DB_USERNAME=username
+DB_PASSWORD=PaSSword*
+
+6- Common paths:
+example-app/app/Http/Controllers/ #i.e.: 
+example-app/routes/api.php        #i.e.: REST APIs
+example-app/routes/web.php        #i.e.: MVC controller
+#i.e.: it stores ".blade.php" templates rendered by the MVC controller:
+example-app/resources/views/
+#CSS and JavaScript files:
+example-app/resources/css/
+example-app/resources/js/
+#i.e.: a migration is a way to define and manage database schema changes.
+It's a version control system for your database.
+Allowing you to modify your database's structure without directly writing SQL queries.
+example-app/database/migrations/
+
+7- Installing some dependencies
+./artisan make:model Ejercito -mc;
+#'ProjectController' automatically generates a set of standard CRUD
+./artisan make:controller ProjectController
+#'Breeze' package provides authentication scaffolding
+composer require laravel/breeze --dev
+./artisan breeze:install
+npm run dev   #Activates authentication service.
+
+#Create tables based on schemas defined at example-app/database/migrations/
+./artisan migrate
+#CAUTION:   ./artisan migrate:fresh   will drop-&-redo all tables.
+
+
+#this creates a time-stamped schema under example-app/database/migrations/
+./artisan make:migration create_ejercito_table
