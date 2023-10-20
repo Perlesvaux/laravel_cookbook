@@ -1,4 +1,4 @@
-@#0- install php & php-xml:@#q
+0- install php & php-xml:
 @bash
 sudo apt update
 sudo apt install php
@@ -8,9 +8,8 @@ php -ini | grep php.ini  #Check config file with
 /etc/php/8.1/cli/php.ini  #Config file location
 @bashq
 
-#Run server: 
-Go to project's directory and do:
 @bash
+#Run server: go to project's directory and do:
 php -S localhost:8000 
 @bashq
 
@@ -18,8 +17,10 @@ php -S localhost:8000
 Install @a XAMPP @aq  @href https://www.apachefriends.org/es/download.html @hrefq
 @bash
 /opt/lampp/etc/php.ini  #Config file location
-#Run server: 
-sudo /opt/lampp/lampp start    #turn it off with: sudo /opt/lampp/lampp stop
+#Run server:
+sudo /opt/lampp/lampp start
+#turn it off:
+sudo /opt/lampp/lampp stop
 @bashq
 
 
@@ -42,7 +43,7 @@ extension=pdo_sqlite
 @phpq
 
 --Dependencies--
-@#1- Installing Node and npm through nvm:@#q
+1- Installing Node and npm through nvm:
 #Install nvm (Node Version Manager)
 @bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
@@ -50,8 +51,9 @@ nvm install 18
 nvm use 18
 @bashq
 
-@#2- install composer (package manager) in current directory@#q
-go @a here @aq @href https://getcomposer.org/download/ @hrefq and follow CLI instructions.
+2- install composer (package manager) in current directory
+go @a here @aq @href https://getcomposer.org/download/ @hrefq
+...and follow CLI instructions.
 
 You should now have a "composer.phar" on current directory.
 #Add it to "~/bin/" to make it accessible from anywhere
@@ -60,7 +62,7 @@ mv composer.phar ~/bin/composer
 @bashq
 
 --Laravel--
-@#3- create Laravel project:@#q
+3- create Laravel project:
 @bash
 php composer.phar create-project laravel/laravel example-app
 @bashq
@@ -76,13 +78,15 @@ php artisan serve  #or ./artisan serve
 @bashq
 
 --Database config--
-@#4- This example uses MySQL.@#q
+4- This example uses MySQL.
 For most use-cases, an empty database & a single user with enough privileges will be enough
-@sql
+@bash
 sudo apt install mysql-server
 sudo mysql_secure_installation
 systemctl status mysql
 sudo mysql
+@bashq
+@sql
 CREATE DATABASE databasename;
 CREATE USER 'username'@'localhost' IDENTIFIED BY 'enterPasswordHere';
 GRANT INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost';
@@ -99,7 +103,7 @@ Or, with:
 mysql -h localhost -u username -p databasename
 @bashq
 
-@#5- now, edit the example-app/.env file.@#q
+5- now, edit the example-app/.env file.
 @php
 #configure database:
 DB_CONNECTION=mysql
@@ -111,7 +115,7 @@ DB_PASSWORD=PaSSword*
 @phpq
 
 
-@#6- Let's setup the model, migration and controller:@#q
+6- Let's setup the model, migration and controller:
 @bash
 ./artisan make:model profesor -mc
 @bashq
@@ -152,12 +156,20 @@ class profesor extends Model
 }   
 @phpq
 
+If database doesn't yet contain 'profesors' table, this command below will create it:
+@bash
+./artisan migrate
+#or this one below to reset whole table and start over:
+./artisan migrate:fresh
+@bashq
+
+
+
 
 ./artisan make:model student
 
 ./artisan make:controller studentController
 
-./artisan migrate
 
 
 
