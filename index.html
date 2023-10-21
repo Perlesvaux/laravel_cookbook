@@ -108,7 +108,6 @@ sudo /opt/lampp/lampp start
 sudo /opt/lampp/lampp stop
 </code></pre>
 
-
 <h4>--Setup config file php.ini--
 </h4><pre><code class="language-php">
 #Un-comment following extensions:
@@ -136,6 +135,7 @@ nvm install 18
 nvm use 18
 </code></pre>
 
+
 <h3>2- install composer (package manager) in current directory
 </h3>Go <a href=" https://getcomposer.org/download/ ">here </a> 
 ...and follow CLI instructions.
@@ -145,6 +145,7 @@ You should now have a "composer.phar" on current directory.
 #Add it to ~/bin/ to make it accessible from anywhere
 mv composer.phar ~/bin/composer
 </code></pre>
+
 
 <h4>--Laravel--
 </h4><h3>3- create Laravel project:
@@ -161,6 +162,7 @@ composer create-project laravel/laravel example-app
 cd example-app
 php artisan serve  #or ./artisan serve
 </code></pre>
+
 
 <h4>--Database config--
 </h4><h3>4- This example uses MySQL.
@@ -187,6 +189,7 @@ Or, with:
 <pre><code class="language-bash">
 mysql -h localhost -u username -p databasename
 </code></pre>
+
 
 <h3>5- Configure your project's database settings:
 </h3>Edit your example-app/.env file accordingly.
@@ -243,6 +246,7 @@ If database doesn't yet contain 'professors' table, this command below will crea
 #or this one below to reset whole table and start over:
 ./artisan migrate:fresh
 </code></pre>
+
 
 <h3>8- Model:
 </h3>Go to the [app/Models/professor.php]
@@ -356,6 +360,7 @@ class ProfessorController extends Controller
 }
 </code></pre>
 
+
 <h3>10- Web Routes:
 </h3>Web routes are typically used for handling views.
 We'll now map routes to controller functions.
@@ -394,6 +399,7 @@ Route::get('/delete_item/{id}',     [ProfessorController::class, 'start_delete']
 Route::delete('/delete_submit/{id}', [ProfessorController::class, 'commit_delete'])-&gt;name('deleting');
 </code></pre>
 
+
 <h3>11- Views:
 </h3><h4>--CSS--
 </h4><pre><code class="language-bash">
@@ -428,7 +434,6 @@ Yielded sections are placeholders for child-templates to fill-in.
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-
 
 <h4>--Templates--
 </h4>Go to resources/views/ and create these blade templates:
@@ -516,6 +521,7 @@ Success!
 &lt;a href="{{route('home')}}"&gt;back to homepage&lt;/a&gt;
 @endsection
 </code></pre>
+
 
 <h3>12- miscellaneous:
 </h3><h4>--Common paths--

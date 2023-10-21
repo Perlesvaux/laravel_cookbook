@@ -23,7 +23,6 @@ sudo /opt/lampp/lampp start
 sudo /opt/lampp/lampp stop
 @bashq
 
-
 --Setup config file php.ini--
 @php
 #Un-comment following extensions:
@@ -51,6 +50,7 @@ nvm install 18
 nvm use 18
 @bashq
 
+
 2- install composer (package manager) in current directory
 Go @a here @aq @href https://getcomposer.org/download/ @hrefq
 ...and follow CLI instructions.
@@ -60,6 +60,7 @@ You should now have a "composer.phar" on current directory.
 #Add it to ~/bin/ to make it accessible from anywhere
 mv composer.phar ~/bin/composer
 @bashq
+
 
 --Laravel--
 3- create Laravel project:
@@ -76,6 +77,7 @@ composer create-project laravel/laravel example-app
 cd example-app
 php artisan serve  #or ./artisan serve
 @bashq
+
 
 --Database config--
 4- This example uses MySQL.
@@ -102,6 +104,7 @@ Or, with:
 @bash
 mysql -h localhost -u username -p databasename
 @bashq
+
 
 5- Configure your project's database settings:
 Edit your example-app/.env file accordingly.
@@ -158,6 +161,7 @@ If database doesn't yet contain 'professors' table, this command below will crea
 #or this one below to reset whole table and start over:
 ./artisan migrate:fresh
 @bashq
+
 
 8- Model:
 Go to the [app/Models/professor.php]
@@ -271,6 +275,7 @@ class ProfessorController extends Controller
 }
 @phpq
 
+
 10- Web Routes:
 Web routes are typically used for handling views.
 We'll now map routes to controller functions.
@@ -309,6 +314,7 @@ Route::get('/delete_item/{id}',     [ProfessorController::class, 'start_delete']
 Route::delete('/delete_submit/{id}', [ProfessorController::class, 'commit_delete'])->name('deleting');
 @phpq
 
+
 11- Views:
 --CSS--
 @bash
@@ -343,7 +349,6 @@ Yielded sections are placeholders for child-templates to fill-in.
 </body>
 </html>
 @markupq
-
 
 --Templates--
 Go to resources/views/ and create these blade templates:
@@ -431,6 +436,7 @@ Success!
 <a href="{{route('home')}}">back to homepage</a>
 @endsection
 @markupq
+
 
 12- miscellaneous:
 --Common paths--
