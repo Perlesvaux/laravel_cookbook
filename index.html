@@ -141,8 +141,8 @@ nvm use 18
 ...and follow CLI instructions.
 
 You should now have a "composer.phar" on current directory.
-#Add it to "~/bin/" to make it accessible from anywhere
 <pre><code class="language-bash">
+#Add it to ~/bin/ to make it accessible from anywhere
 mv composer.phar ~/bin/composer
 </code></pre>
 
@@ -517,49 +517,39 @@ Success!
 @endsection
 </code></pre>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h3>6- Common paths:
-</h3>example-app/app/Http/Controllers/ #i.e.: 
-example-app/routes/api.php        #i.e.: REST APIs
+<h3>12- miscellaneous:
+</h3><h4>--Common paths--
+</h4><pre><code class="language-bash">
+example-app/public/css            #i.e.: CSS files
+example-app/resources/views/      #i.e.: Blade templates and layouts
+example-app/app/Models            #i.e.: Models
+example-app/app/Http/Controllers/ #i.e.: ModelControllers
 example-app/routes/web.php        #i.e.: MVC controller
-#i.e.: it stores ".blade.php" templates rendered by the MVC controller:
-example-app/resources/views/
-#CSS and JavaScript files:
-example-app/resources/css/
-example-app/resources/js/
-#i.e.: a migration is a way to define and manage database schema changes.
-It's a version control system for your database.
-Allowing you to modify your database's structure without directly writing SQL queries.
-example-app/database/migrations/
-
-<h3>7- Installing some dependencies
-</h3>./artisan make:model Ejercito -mc;
-#'ProjectController' automatically generates a set of standard CRUD
-./artisan make:controller ProjectController
-#'Breeze' package provides authentication scaffolding
+</code></pre>
+<h4>--authentication scaffolding--
+</h4><h5>--->Be careful! This will overwrite your routes/web.php file.
+</h5>'Breeze' package protects your endpoits with user-authentication:
+<pre><code class="language-bash">
 composer require laravel/breeze --dev
-./artisan breeze:install
-npm run dev   #Activates authentication service.
-
-#Create tables based on schemas defined at example-app/database/migrations/
+./artisan breeze:install  #Blade with Alpine/ Darkmode/ PHPUnit
 ./artisan migrate
-#CAUTION:   ./artisan migrate:fresh   will drop-&-redo all tables.
+npm run dev   #Activates authentication service. Run on different terminal
+</code></pre>
 
+Add your endpoints under middleware('auth')->group(function(){...}):
+<pre><code class="language-php">
+use App\Http\Controllers\ProfessorController; #Import controller!
+#{...}
+Route::middleware('auth')-&gt;group(function () {
+    #These were auto-generated
+    Route::get('/profile', [ProfileController::class, 'edit'])-&gt;name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])-&gt;name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])-&gt;name('profile.destroy');
 
-#this creates a time-stamped schema under example-app/database/migrations/
-./artisan make:migration create_ejercito_table
+    #Here you can put the endpoints previously defined on step 10.
+    #Important: Any endpoint left out of this scope remains accessible without authentication.
+});
+</code></pre>
 
         </pre>
             <script>
