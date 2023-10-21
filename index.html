@@ -28,7 +28,7 @@ body{
   }
 
   h5{
-    color:AntiqueWhite;
+    color:coral;
     font-weight: bold;
   }
 
@@ -206,22 +206,23 @@ DB_PASSWORD=PaSSword*
 ./artisan make:model professor -mc
 </code></pre>
 This will automatically create:
-<h5>-->the model [app/Models/professor.php]
+<h5>--->Model [app/Models/professor.php]
 </h5>Each model class defines a mapping between the database table and the application code.
 This mapping is based on naming conventions.
 i.e.: 'professor' model maps to a 'professors' database table.
 
-<h5>-->the migration [database/migrations/2023_10_19_094147_create_professors_table.php]
+<h5>--->Migration [database/migrations/2023_10_19_094147_create_professors_table.php]
 </h5>Migrations help you create new tables in your database or change existing ones.
 Each migration file contains instructions on what the table should look like.
 Like a database 'blueprint' or 'cookbook'.
 
-<h5>-->the controller [app/Http/Controllers/ProfessorController.php]
+<h5>--->Controller [app/Http/Controllers/ProfessorController.php]
 </h5>Controllers organize your application's logic into reusable and maintainable classes.
 i.e.: rendering views or returning JSON data. 
 
 
-<h3>7- Time to code! - Migration:
+<h4>--Time to code!--
+</h4><h3>7- Migration:
 </h3>Go to the [database/migrations/2023_10_19_094147_create_professors_table.php]
 Edit the "up()" function to include the columns you want:
 <pre><code class="language-php">
@@ -243,7 +244,7 @@ If database doesn't yet contain 'professors' table, this command below will crea
 ./artisan migrate:fresh
 </code></pre>
 
-<h3>8- Time to code! - Model:
+<h3>8- Model:
 </h3>Go to the [app/Models/professor.php]
 Right below where it says "use HasFactory", add:
 <pre><code class="language-php">
@@ -263,7 +264,7 @@ class professor extends Model
 </code></pre>
 
 
-<h3>9- Time to code! - Controller:
+<h3>9- Controller:
 </h3>Go to the [app/Http/Controllers/ProfessorController.php]
 <pre><code class="language-php">
 use App\Models\professor; #Import professor model!
@@ -355,7 +356,7 @@ class ProfessorController extends Controller
 }
 </code></pre>
 
-<h3>10- Time to code! - Web Routes:
+<h3>10- Web Routes:
 </h3>Web routes are typically used for handling views.
 We'll now map routes to controller functions.
 
@@ -368,34 +369,153 @@ use App\Http\Controllers\ProfessorController; #Import controller!
 Route::get('/homepage',  [ProfessorController::class, 'retrieve'])-&gt;name('home');
 
 
-#GET request. Endpoint 'add' maps method 'start_create' to URL '/newOne' (Renders a form).
+#GET request (renders a form). Endpoint 'add' maps method 'start_create' to URL '/newOne' .
 Route::get('/newOne', [ProfessorController::class, 'start_create'])-&gt;name('add');
 
 #POST request. Endpoint 'adding' maps method 'commit_create' to URL '/newEntry'. 
 Route::post('/newEntry', [ProfessorController::class, 'commit_create'])-&gt;name('adding');
 
 
-#GET request. Endpoint 'update' maps method 'start_update' to URL '/update_item/{id}' (Renders a form)
+/*GET request (renders a form). Endpoint 'update' maps method 'start_update'
+  to URL '/update_item/' with route parameter 'id'*/
 Route::get('/update_item/{id}',   [ProfessorController::class, 'start_update'])-&gt;name('update');
 
-#PUT request. Endpoint 'updating' maps method 'commit_update' to URL '/update_submit/{id}'
+/*PUT request. Endpoint 'updating' maps method 'commit_update'
+  to URL '/update_submit/' with route parameter 'id'*/
 Route::put('/update_submit/{id}', [ProfessorController::class, 'commit_update'])-&gt;name('updating');
 
 
-#GET request. Endpoint 'delete' maps method 'start_delete' to URL '/delete_item/{id}' (Renders a form)
+/*GET request (renders a form). Endpoint 'delete' maps method 'start_delete'
+  to URL '/delete_item/' with route parameter 'id'*/
 Route::get('/delete_item/{id}',     [ProfessorController::class, 'start_delete']);
 
-#DELETE request. Endpoint 'deleting' maps method 'commit_delete' to URL '/delete_submit/{id}'
+/*DELETE request. Endpoint 'deleting' maps method 'commit_delete'
+  to URL '/delete_submit/' with route parameter 'id'*/
 Route::delete('/delete_submit/{id}', [ProfessorController::class, 'commit_delete'])-&gt;name('deleting');
 </code></pre>
 
+<h3>11- Views:
+</h3><h4>--CSS--
+</h4><pre><code class="language-bash">
+#Create this directory:
+mkdir public/css/
+
+#Create and edit your css file:
+touch public/css/app.css
+</code></pre>
+
+<h4>--layouts--
+</h4>Make 'layouts' to recycle style across child-templates:
+<pre><code class="language-bash">
+mkdir resources/views/layouts/
+touch resources/views/layouts/parent.blade.php
+</code></pre>
+Yielded sections are placeholders for child-templates to fill-in.
+<pre><code class="language-markup">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;@yield('pagename')&lt;/title&gt;
+
+    &lt;!--Pay attention! This is how you link the css file!--&gt;
+    &lt;link href="{{ asset('css/app.css') }}" rel="stylesheet"&gt;
+
+  &lt;/head&gt;
+&lt;body&gt;
+@yield('contents')
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
 
 
+<h4>--Templates--
+</h4>Go to resources/views/ and create these blade templates:
 
-./artisan make:model student
+<h5>--->[resources/views/allOfThem.blade.php]
+</h5><pre><code class="language-markup">
+@extends('layouts.parent')
 
-./artisan make:controller studentController
+@section('pagename')
+Homepage
+@endsection
 
+@section('contents')
+&lt;!--Pay attention! see how route-parameters are passed to endpoints! --&gt;
+&lt;table&gt;
+@foreach($roster as $member)
+    &lt;tr&gt;
+        &lt;td&gt;{{$member-&gt;name}}&lt;/td&gt;
+        &lt;td&gt;{{$member-&gt;age}}&lt;/td&gt;
+        &lt;td&gt;&lt;a href="{{route('update', ['id'=&gt;$member-&gt;id])}}"&gt;edit&lt;/a&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;a href="{{route('delete', ['id'=&gt;$member-&gt;id])}}"&gt;delete&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+@endforeach
+&lt;/table&gt;
+&lt;a href="{{route('add')}}"&gt;Add new professor!&lt;/a&gt;
+@endsection
+</code></pre>
+<h5>--->[resources/views/newProf.blade.php]
+</h5><pre><code class="language-markup">
+@extends('layouts.parent')
+@section('pagename')
+...Adding
+@endsection
+@section('contents')
+&lt;form method="POST" action="{{ route('adding') }}"&gt;
+    @csrf &lt;!-- Cross-Site Request Forgery token --&gt;
+    Known as: &lt;input type="text" name="name" required&gt; &lt;br&gt;
+    Winters: &lt;input type="number" name="age" required&gt; &lt;br&gt;
+    &lt;button type="submit"&gt;Add new entry&lt;/button&gt;
+&lt;/form&gt;
+&lt;a href="{{route('home')}}"&gt;Cancel&lt;/a&gt;
+@endsection
+</code></pre>
+<h5>--->[resources/views/updateProf.blade.php]
+</h5><pre><code class="language-markup">
+@extends('layouts.parent')
+@section('pagename')
+...Updating
+@endsection
+@section('contents')
+&lt;form method="POST" action="{{ route('updating', ['id' =&gt; $old-&gt;id]) }}"&gt;
+    @csrf &lt;!-- Cross-Site Request Forgery token --&gt;
+    @method('PUT') &lt;!-- Specify that it's a PUT request --&gt;
+    A.K.A: &lt;input type="text" name="name" value="{{$old-&gt;name}}" required&gt; &lt;br&gt;
+    Summers: &lt;input type="number" name="age" value="{{$old-&gt;age}}" required&gt; &lt;br&gt;
+    &lt;button type="submit"&gt;Submit changes&lt;/button&gt;
+&lt;/form&gt;
+&lt;a href="{{route('home')}}"&gt;Cancel&lt;/a&gt;
+@endsection
+</code></pre>
+<h5>--->[resources/views/deleteProf.blade.php]
+</h5><pre><code class="language-markup">
+@extends('layouts.parent')
+@section('pagename')
+...Deleting
+@endsection
+@section('contents')
+Do you wanna permanently delete "{{$old-&gt;name}}"?
+&lt;form method="POST" action="{{ route('deleting', ['id' =&gt; $old-&gt;id]) }}"&gt;
+    @csrf &lt;!-- CSRF token --&gt;
+    @method('DELETE') &lt;!-- Specify that it's a DELETE request --&gt;
+    &lt;button type="submit"&gt;Yes&lt;/button&gt;
+&lt;/form&gt;
+&lt;a href="{{route('home')}}"&gt;Cancel&lt;/a&gt;
+@endsection
+</code></pre>
+<h5>--->[resources/views/formSubmitted.blade.php]
+</h5><pre><code class="language-markup">
+@extends('layouts.parent')
+@section('pagename')
+Success!
+@endsection
+@section('contents')
+{{$prof-&gt;name}} (age: {{$prof-&gt;age}}) added&lt;br&gt;
+&lt;a href="{{route('home')}}"&gt;back to homepage&lt;/a&gt;
+@endsection
+</code></pre>
 
 
 
