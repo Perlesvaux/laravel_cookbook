@@ -198,32 +198,43 @@ class ProfesorController extends Controller
 
     /*$request receives form-data as JSON.
     | Map the value of each key to a property
-    | of a new profesor instance.
-    | This object is passed from controller to view
-    | through template variable 'newcomer'.
+    | of a profesor instance.
+    | Pass this object from controller to view
+    | through template variable 'prof'.
     | Once database is updated, this view is rendered:
     | 'resources/views/formSubmitted.blade.php'.
     */
     public function create(Request $request){
-        $entry = new king;
+        $entry = new profesor;
         $entry->name = $request->input('name');
         $entry->age  = $request->input('age');
         $entry->save();
-        return "$entry->name entered successfully <a href='/homepage'> back to homepage </a>";
+        return view('formSubmitted', ['prof'=>$entry]);
     }
 
+
+    /*Locate the profesor that matches the $identifier. 
+    | Pass this data from controller to view through
+    | template variable 'old'. Rendered view will be this
+    | form: 'resources/views/updateProf.blade.php' 
+    |
+    | $request receives form-data as JSON.
+    | Map the value of each key to a property of an
+    | already existing database entry. Pass that object from
+    | controller to view through template variable 'prof'.
+    | Render view: 'resources/views/formSubmitted.blade.php'
+    */
     public function start_update($identifier){
-        $entry = king::find($identifier);
-        return view('updateKing', ['old' => $entry]);
+        $entry = profesor::find($identifier);
+        return view('updateProf', ['old' => $entry]);
     }
 
     public function commit_update(Request $request, $identifier){
-        $entry = king::find($identifier);
+        $entry = profesor::find($identifier);
         $entry->name = $request->input('name');
         $entry->age  = $request->input('age');
         $entry->save();
-
-        return "$entry->name entered successfully <a href='/homepage'> back to homepage </a>";
+        return view('formSubmitted', ['prof' => $entry]);
     }
 
     public function start_delete($identifier){

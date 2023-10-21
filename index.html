@@ -283,18 +283,18 @@ class ProfesorController extends Controller
 
     /*$request receives form-data as JSON.
     | Map the value of each key to a property
-    | of a new profesor instance.
-    | This object is passed from controller to view
+    | of a profesor instance.
+    | Pass this object from controller to view
     | through template variable 'newcomer'.
     | Once database is updated, this view is rendered:
     | 'resources/views/formSubmitted.blade.php'.
     */
     public function create(Request $request){
-        $entry = new king;
+        $entry = new profesor;
         $entry-&gt;name = $request-&gt;input('name');
         $entry-&gt;age  = $request-&gt;input('age');
         $entry-&gt;save();
-        return "$entry-&gt;name entered successfully &lt;a href='/homepage'&gt; back to homepage &lt;/a&gt;";
+        return view('formSubmitted', ['newcomer'=&gt;$entry]);
     }
 
     public function start_update($identifier){
