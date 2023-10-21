@@ -203,31 +203,31 @@ DB_PASSWORD=PaSSword*
 
 <h3>6- Let's setup the model, migration and controller:
 </h3><pre><code class="language-bash">
-./artisan make:model profesor -mc
+./artisan make:model professor -mc
 </code></pre>
 This will automatically create:
-<h5>-->the model [app/Models/profesor.php]
+<h5>-->the model [app/Models/professor.php]
 </h5>Each model class defines a mapping between the database table and the application code.
 This mapping is based on naming conventions.
-i.e.: 'profesor' model maps to a 'profesors' database table.
+i.e.: 'professor' model maps to a 'professors' database table.
 
-<h5>-->the migration [database/migrations/2023_10_19_094147_create_profesors_table.php]
+<h5>-->the migration [database/migrations/2023_10_19_094147_create_professors_table.php]
 </h5>Migrations help you create new tables in your database or change existing ones.
 Each migration file contains instructions on what the table should look like.
 Like a database 'blueprint' or 'cookbook'.
 
-<h5>-->the controller [app/Http/Controllers/ProfesorController.php]
+<h5>-->the controller [app/Http/Controllers/ProfessorController.php]
 </h5>Controllers organize your application's logic into reusable and maintainable classes.
 i.e.: rendering views or returning JSON data. 
 
 
 <h3>7- Time to code! - Migration:
-</h3>Go to the [database/migrations/2023_10_19_094147_create_profesors_table.php]
+</h3>Go to the [database/migrations/2023_10_19_094147_create_professors_table.php]
 Edit the "up()" function to include the columns you want:
 <pre><code class="language-php">
 public function up(): void
 {
-Schema::create('profesors', function (Blueprint $table) {
+Schema::create('professors', function (Blueprint $table) {
     $table-&gt;id();
     $table-&gt;string('name');
     $table-&gt;integer('age');
@@ -235,7 +235,7 @@ Schema::create('profesors', function (Blueprint $table) {
 });
 }
 </code></pre>
-If database doesn't yet contain 'profesors' table, this command below will create it:
+If database doesn't yet contain 'professors' table, this command below will create it:
 <pre><code class="language-bash">
 ./artisan migrate
 
@@ -244,16 +244,16 @@ If database doesn't yet contain 'profesors' table, this command below will creat
 </code></pre>
 
 <h3>8- Time to code! - Model:
-</h3>Go to the [app/Models/profesor.php]
+</h3>Go to the [app/Models/professor.php]
 Right below where it says "use HasFactory", add:
 <pre><code class="language-php">
-class profesor extends Model
+class professor extends Model
 {   
     use HasFactory; 
 
     public $timestamps = false; /*delete this line if you're okay including timestamps!*/
 
-    protected $table = 'profesors';
+    protected $table = 'professors';
 
     protected $fillable =[
      'name'.
@@ -264,56 +264,78 @@ class profesor extends Model
 
 
 <h3>9- Time to code! - Controller:
-</h3>Go to the [app/Http/Controllers/ProfesorController.php]
+</h3>Go to the [app/Http/Controllers/ProfessorController.php]
 <pre><code class="language-php">
-use App\Models\profesor; #Ojo
+use App\Models\professor; #Import professor model!
 
-class ProfesorController extends Controller
+class ProfessorController extends Controller
 {
-    /*Query database, look for all profesors.
+    /* RETRIEVE
+    |Query database, look for all professors.
     | Assign all entries to a list $teachers.
     | Pass this data from controller to view
     | through template variable 'result'.
     | View rendered: 'resources/views/allOfThem.blade.php'.
     */
     public function retrieve(){
-        $teachers = profesor::all();
+        $teachers = professor::all();
         return view('allOfThem', ['result' =&gt; $teachers]);
     }
 
-    /*$request receives form-data as JSON.
+    /* CREATE
+    |$request receives form-data as JSON.
     | Map the value of each key to a property
-    | of a profesor instance.
+    | of a professor instance.
     | Pass this object from controller to view
-    | through template variable 'newcomer'.
+    | through template variable 'prof'.
     | Once database is updated, this view is rendered:
     | 'resources/views/formSubmitted.blade.php'.
     */
     public function create(Request $request){
-        $entry = new profesor;
+        $entry = new professor;
         $entry-&gt;name = $request-&gt;input('name');
         $entry-&gt;age  = $request-&gt;input('age');
         $entry-&gt;save();
-        return view('formSubmitted', ['newcomer'=&gt;$entry]);
+        return view('formSubmitted', ['prof'=&gt;$entry]);
     }
 
+    /* UPDATE
+    | Locate the professor that matches the $identifier. 
+    | Pass this data from controller to view through
+    | template variable 'old'. Rendered view will be this
+    | form: 'resources/views/updateProf.blade.php' 
+    |
+    | $request receives form-data as JSON.
+    | Map the value of each key to a property of an
+    | already existing database entry. Pass that object from
+    | controller to view through template variable 'prof'.
+    | Render view: 'resources/views/formSubmitted.blade.php'
+    */
     public function start_update($identifier){
-        $entry = king::find($identifier);
-        return view('updateKing', ['old' =&gt; $entry]);
+        $entry = professor::find($identifier);
+        return view('updateProf', ['old' =&gt; $entry]);
     }
 
     public function commit_update(Request $request, $identifier){
-        $entry = king::find($identifier);
+        $entry = professor::find($identifier);
         $entry-&gt;name = $request-&gt;input('name');
         $entry-&gt;age  = $request-&gt;input('age');
         $entry-&gt;save();
-
-        return "$entry-&gt;name entered successfully &lt;a href='/homepage'&gt; back to homepage &lt;/a&gt;";
+        return view('formSubmitted', ['prof' =&gt; $entry]);
     }
 
+    /* DELETE
+    | Locate the professor that matches the $identifier. 
+    | Pass this data from controller to view through
+    | template variable 'old'. Rendered view will be this
+    | form: 'resources/views/deleteProf.blade.php' 
+    | 
+    | Upon form-submission, selected professor is
+    | deleted from database. View rendered is:
+    | 'resources/views/allOfThem.blade.php'
+    */
     public function start_delete($identifier){
         $entry = king::find($identifier);
-        /* $entry-&gt;delete(); */
         return view('deleteKing', ['old' =&gt; $entry]);
     }
 
