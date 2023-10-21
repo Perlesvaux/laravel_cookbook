@@ -283,6 +283,8 @@ class ProfessorController extends Controller
     }
 
     /* CREATE
+    | Render form: 'resources/views/newProf.blade.php'
+    |
     | $request receives form-data as JSON.
     | Map the value of each key to a property
     | of a professor instance.
@@ -291,7 +293,11 @@ class ProfessorController extends Controller
     | Once database is updated, this view is rendered:
     | 'resources/views/formSubmitted.blade.php'.
     */
-    public function create(Request $request){
+    public function start_create(){
+         return view('newProf');
+     }
+
+    public function commit_create(Request $request){
         $entry = new professor;
         $entry-&gt;name = $request-&gt;input('name');
         $entry-&gt;age  = $request-&gt;input('age');
@@ -346,18 +352,42 @@ class ProfessorController extends Controller
         $entry-&gt;delete();
         return view('allOfThem', ['roster'=&gt;professor::all()]);
     }
-
-
-
-
-
-    public function retrieveOne($identifier){
-        $entry = king::find($identifier);
-        return "$entry-&gt;name is $entry-&gt;age";
-    }
 }
 </code></pre>
 
+<h3>10- Time to code! - Web Routes:
+</h3>Web routes are typically used for handling views.
+We'll now map routes to controller functions.
+
+Go to routes/web.php
+
+<pre><code class="language-php">
+use App\Http\Controllers\ProfessorController; #Import controller!
+
+#GET request. Endpoint 'home' maps method 'retrieve' to URL '/homepage'.
+Route::get('/homepage',  [ProfessorController::class, 'retrieve'])-&gt;name('home');
+
+
+#GET request. Endpoint 'add' maps method 'start_create' to URL '/newOne' (Renders a form).
+Route::get('/newOne', [ProfessorController::class, 'start_create'])-&gt;name('add');
+
+#POST request. Endpoint 'adding' maps method 'commit_create' to URL '/newEntry'. 
+Route::post('/newEntry', [ProfessorController::class, 'commit_create'])-&gt;name('adding');
+
+
+#GET request. Endpoint 'update' maps method 'start_update' to URL '/update_item/{id}' (Renders a form)
+Route::get('/update_item/{id}',   [ProfessorController::class, 'start_update'])-&gt;name('update');
+
+#PUT request. Endpoint 'updating' maps method 'commit_update' to URL '/update_submit/{id}'
+Route::put('/update_submit/{id}', [ProfessorController::class, 'commit_update'])-&gt;name('updating');
+
+
+#GET request. Endpoint 'delete' maps method 'start_delete' to URL '/delete_item/{id}' (Renders a form)
+Route::get('/delete_item/{id}',     [ProfessorController::class, 'start_delete']);
+
+#DELETE request. Endpoint 'deleting' maps method 'commit_delete' to URL '/delete_submit/{id}'
+Route::delete('/delete_submit/{id}', [ProfessorController::class, 'commit_delete'])-&gt;name('deleting');
+</code></pre>
 
 
 
