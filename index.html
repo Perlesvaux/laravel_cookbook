@@ -271,19 +271,19 @@ use App\Models\professor; #Import professor model!
 class ProfessorController extends Controller
 {
     /* RETRIEVE
-    |Query database, look for all professors.
+    | Query database, look for all professors.
     | Assign all entries to a list $teachers.
     | Pass this data from controller to view
-    | through template variable 'result'.
+    | through template variable 'roster'.
     | View rendered: 'resources/views/allOfThem.blade.php'.
     */
     public function retrieve(){
         $teachers = professor::all();
-        return view('allOfThem', ['result' =&gt; $teachers]);
+        return view('allOfThem', ['roster' =&gt; $teachers]);
     }
 
     /* CREATE
-    |$request receives form-data as JSON.
+    | $request receives form-data as JSON.
     | Map the value of each key to a property
     | of a professor instance.
     | Pass this object from controller to view
@@ -333,16 +333,18 @@ class ProfessorController extends Controller
     | Upon form-submission, selected professor is
     | deleted from database. View rendered is:
     | 'resources/views/allOfThem.blade.php'
+    | and its template variable 'roster' is mapped
+    | to a list of all database entries.
     */
     public function start_delete($identifier){
-        $entry = king::find($identifier);
-        return view('deleteKing', ['old' =&gt; $entry]);
+        $entry = professor::find($identifier);
+        return view('deleteProf', ['old' =&gt; $entry]);
     }
 
     public function commit_delete($identifier){
-        $entry = king::find($identifier);
+        $entry = professor::find($identifier);
         $entry-&gt;delete();
-        return view('allOfThem', ['monarchs'=&gt;king::all()]);
+        return view('allOfThem', ['roster'=&gt;professor::all()]);
     }
 
 
