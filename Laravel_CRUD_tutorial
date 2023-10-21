@@ -471,3 +471,45 @@ Route::middleware('auth')->group(function () {
     #Important: Any endpoint left out of this scope remains accessible without authentication.
 });
 @phpq
+
+--Generating PDF reports--
+@bash
+composer require barryvdh/laravel-dompdf
+@bashq
+
+Edit config/app.php
+Look for this comment:
+@php
+    /*
+     * Application Service Providers...
+     */
+@phpq
+Add this one to the list of 'providers':
+@php
+Barryvdh\DomPDF\ServiceProvider::class,
+@phpq
+
+Time to update the app/Http/Controllers/ProfessorController.php:
+@php
+use PDF #Dont forget this import!
+
+public function getPDF(){
+    $teachers=professor::all();
+    $pdf = PDF::loadView('allOfThem', ['roster'=>$teachers]);
+    return $pdf->stream('rosterInPDF.pdf');
+    #return $pdf->download('downloadedRoster.pdf'); 
+}
+@phpq
+
+
+
+
+
+
+
+
+
+
+
+
+
