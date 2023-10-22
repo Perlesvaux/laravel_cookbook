@@ -91,7 +91,7 @@ sudo mysql
 @sql
 CREATE DATABASE databasename;
 CREATE USER 'username'@'localhost' IDENTIFIED BY 'enterPasswordHere';
-GRANT INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost';
+GRANT CREATE, DROP, ALTER, INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost';
 @sqlq
 New user can now access MySQL like this:
 @bash

@@ -176,7 +176,7 @@ sudo mysql
 <pre><code class="language-sql">
 CREATE DATABASE databasename;
 CREATE USER 'username'@'localhost' IDENTIFIED BY 'enterPasswordHere';
-GRANT INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost';
+GRANT CREATE, DROP, ALTER, INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost';
 </code></pre>
 New user can now access MySQL like this:
 <pre><code class="language-bash">
