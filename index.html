@@ -593,8 +593,14 @@ Finally, map it to a route at: routes/web.php
 Route::get('/generatePDF', [ProfessorController::class, 'getPDF'])-&gt;name('pdf');
 </code></pre>
 
+Word of caution!. PDF rendering can be very slow if 
+CSS used in the view is from: public/css/
+<pre><code class="language-markup">
+i.e.: this would take a full minute to render!
+&lt;link href="{{ asset('css/app.css') }}" rel="stylesheet"&gt;
 
-
+Therefore, a &lt;style&gt; tag or in-line CSS is preferred!
+</code></pre>
 
 
 
