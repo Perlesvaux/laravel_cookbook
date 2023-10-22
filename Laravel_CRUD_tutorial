@@ -501,7 +501,12 @@ public function getPDF(){
 }
 @phpq
 
-
+Finally, map it to a route at: routes/web.php
+@php
+/*GET request (renders a view as a PDF). Endpoint 'pdf'
+ Maps method 'getPDF' to URL '/generatePDF'.*/
+Route::get('/generatePDF', [ProfessorController::class, 'getPDF'])->name('pdf');
+@phpq
 
 
 

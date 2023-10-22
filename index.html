@@ -557,6 +557,53 @@ Route::middleware('auth')-&gt;group(function () {
 });
 </code></pre>
 
+<h4>--Generating PDF reports--
+</h4><pre><code class="language-bash">
+composer require barryvdh/laravel-dompdf
+</code></pre>
+
+Edit config/app.php
+Look for this comment:
+<pre><code class="language-php">
+    /*
+     * Application Service Providers...
+     */
+</code></pre>
+Add this one to the list of 'providers':
+<pre><code class="language-php">
+Barryvdh\DomPDF\ServiceProvider::class,
+</code></pre>
+
+Time to update the app/Http/Controllers/ProfessorController.php:
+<pre><code class="language-php">
+use PDF #Dont forget this import!
+
+public function getPDF(){
+    $teachers=professor::all();
+    $pdf = PDF::loadView('allOfThem', ['roster'=&gt;$teachers]);
+    return $pdf-&gt;stream('rosterInPDF.pdf');
+    #return $pdf-&gt;download('downloadedRoster.pdf'); 
+}
+</code></pre>
+
+Finally, map it to a route at: routes/web.php
+<pre><code class="language-php">
+/*GET request (renders a view as a PDF). Endpoint 'pdf'
+ Maps method 'getPDF' to URL '/generatePDF'.*/
+Route::get('/generatePDF', [ProfessorController::class, 'getPDF'])-&gt;name('pdf');
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
         </pre>
             <script>
 $(document).ready(function(){
