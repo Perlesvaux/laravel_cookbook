@@ -1,5 +1,5 @@
 # CRUD_laravel
-Back-end tutorial in [12 steps](https://perlesvaux.github.io/CRUD_laravel/)
+PHP back-end tutorial in [12 steps](https://perlesvaux.github.io/CRUD_laravel/)
 
 ## Includes:
 - Installation of PHP, nvm, composer & MySQL.
